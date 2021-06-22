@@ -39,7 +39,12 @@ def preprocess(directory):
 						context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
 
 preprocess(Path("./adl-final-dst-with-chit-chat-seen-domains/data-0614/data-0614/train"))
-preprocess(Path("./adl-final-dst-with-chit-chat-seen-domains/data-0614/data-0614/dev"))
 print(len(context_list), len(context_list[0]))
 with open("dataset/train.json", "w") as f:
+	json.dump(context_list, f, indent=2)
+
+context_list = list()
+preprocess(Path("./adl-final-dst-with-chit-chat-seen-domains/data-0614/data-0614/dev"))
+print(len(context_list), len(context_list[0]))
+with open("dataset/dev.json", "w") as f:
 	json.dump(context_list, f, indent=2)

@@ -8,7 +8,7 @@ import torch
 from tqdm import tqdm
 
 from torch.utils.data import DataLoader, Dataset, ConcatDataset, Subset
-from transformers import MT5ForConditionalGeneration, T5TokenizerFast
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Adafactor
 import transformers
 
@@ -24,31 +24,32 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter('runs/summary_experiment_1')
 
 TRAIN = "train"
-DEV = "public"
+DEV = "dev"
 SPLITS = [TRAIN, DEV]
 
 def main(args):
-    data_paths = {split: args.data_dir / f"{split}.jsonl" for split in SPLITS}
-    data = {split: [json.loads(jline) for jline in path.read_text().splitlines()] for split, path in data_paths.items()}
-    # print(len(data[TRAIN]), data[TRAIN][0]['title'])
-    # print(data[TRAIN][0]['maintext'])
+    data_paths = {split: args.data_dir / f"{split}.json" for split in SPLITS}
+    data = {split: json.loads(path.read_text()) for split, path in data_paths.items()}
+    print(len(data[TRAIN]), data[TRAIN][0]['context'])
+    print(data[TRAIN][0]['chit-chat'])
 
     if (args.start_from_last):
         print("load from last...")
         model = MT5ForConditionalGeneration.from_pretrained(args.ckpt_dir).to(device)
     else:
-        model = MT5ForConditionalGeneration.from_pretrained("google/mt5-small").to(device)
-    tokenizer = T5TokenizerFast.from_pretrained("google/mt5-small")
+        model = GPT2LMHeadModel.from_pretrained('gpt2').to(device)
+    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
     with tokenizer.as_target_tokenizer():
-        train_title_tokenized = tokenizer([train_data["title"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_title_len, padding=True)
-        dev_title_tokenized = tokenizer([dev_data["title"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_title_len, padding=True)
-    train_maintext_tokenized = tokenizer([train_data["maintext"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_maintext_len, padding=True)
-    dev_maintext_tokenized = tokenizer([dev_data["maintext"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_maintext_len, padding=True)
-    # print(len(train_title_tokenized['input_ids']))
-    # print(train_maintext_tokenized['input_ids'][0], dev_maintext_tokenized['input_ids'][0])
+        train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
+        dev_chitchat_tokenized = tokenizer([dev_data["chit-chat"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
+    train_context_tokenized = tokenizer([train_data["context"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
+    dev_context_tokenized = tokenizer([dev_data["context"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
+    print(len(train_chitchat_tokenized['input_ids']))
+    print(train_chitchat_tokenized['input_ids'][0], dev_chitchat_tokenized['input_ids'][0])
     
-    train_set = myDataset(TRAIN, data[TRAIN], train_title_tokenized, train_maintext_tokenized)
-    dev_set = myDataset(DEV, data[DEV], dev_title_tokenized, dev_maintext_tokenized)
+    train_set = myDataset(TRAIN, data[TRAIN], train_chitchat_tokenized, train_context_tokenized)
+    dev_set = myDataset(DEV, data[DEV], dev_chitchat_tokenized, dev_context_tokenized)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
 
     # optimizer = Adafactor(model.parameters(), scale_parameter=True, relative_step=True, warmup_init=True, lr=None)
@@ -110,7 +111,7 @@ def parse_args() -> Namespace:
         "--data_dir",
         type=Path,
         help="Directory to the dataset.",
-        default="./ADL21-HW3/data",
+        default="./dataset",
     )
     parser.add_argument(
         "--ckpt_dir",
