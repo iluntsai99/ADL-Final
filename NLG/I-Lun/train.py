@@ -8,7 +8,7 @@ import torch
 from tqdm import tqdm
 
 from torch.utils.data import DataLoader, Dataset, ConcatDataset, Subset
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import GPT2TokenizerFast, GPT2LMHeadModel
 from transformers import Adafactor
 import transformers
 
@@ -38,13 +38,12 @@ def main(args):
         model = GPT2LMHeadModel.from_pretrained(args.ckpt_dir).to(device)
     else:
         model = GPT2LMHeadModel.from_pretrained('gpt2').to(device)
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+    tokenizer = GPT2TokenizerFast.from_pretrained('gpt2')
     tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer)) 
-    with tokenizer.as_target_tokenizer():
-        train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
-        dev_chitchat_tokenized = tokenizer([dev_data["chit-chat"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
+    train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
+    dev_chitchat_tokenized = tokenizer([dev_data["chit-chat"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
     train_context_tokenized = tokenizer([train_data["context"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
     dev_context_tokenized = tokenizer([dev_data["context"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
     # print(len(train_chitchat_tokenized['input_ids']))
@@ -87,7 +86,7 @@ def main(args):
         model.eval()
         with torch.no_grad():
             dev_acc = 0
-            # randomlist = random.sample(range(0, len(dev_set)), len(dev_set))
+            randomlist = random.sample(range(0, len(dev_set)), len(dev_set))
             dev_subset = Subset(dev_set, randomlist)
             dev_loader = DataLoader(dev_subset, batch_size=args.batch_size, shuffle=False)
             for j, datas in enumerate(dev_loader):
@@ -133,7 +132,7 @@ def parse_args() -> Namespace:
 
     # training
     parser.add_argument("--start_from_last", action="store_true")
-    parser.add_argument("--num_epoch", type=int, default=10)
+    parser.add_argument("--num_epoch", type=int, default=30)
     parser.add_argument("--gradient_accumulation_step", type=int, default=16)
 
     args = parser.parse_args()
@@ -147,7 +146,6 @@ if __name__ == "__main__":
         device = accelerator.device
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    # device = "cpu"
     args = parse_args()
     args.ckpt_dir.mkdir(parents=True, exist_ok=True)
     main(args)

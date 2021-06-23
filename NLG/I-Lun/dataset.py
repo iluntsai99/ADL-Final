@@ -16,4 +16,4 @@ class myDataset(Dataset):
         if self.split == "train" or self.split == "dev":
             return torch.tensor(self.tokenized_chitchat["input_ids"][index]), torch.tensor(self.tokenized_context["input_ids"][index])
         else:
-            return torch.tensor(self.tokenized_context["input_ids"][index]), self.data[index]["id"]
+            return torch.tensor(self.tokenized_context["input_ids"][index]), self.data[index]["dialogue_id"]

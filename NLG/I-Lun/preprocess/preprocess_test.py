@@ -21,9 +21,10 @@ def preprocess(directory):
 				else:  # system turn
 					chitchat_dict = dict()
 					chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
-					chitchat_dict['context'] = context_prefix
+					chitchat_dict['context'] = context_prefix+'='
+					chitchat_dict['system'] = '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
 					context_list.append(chitchat_dict)
-					context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
+					context_prefix += chitchat_dict['system']
 
 preprocess(Path("./adl-final-dst-with-chit-chat-seen-domains/data/data/test_seen"))
 print(len(context_list), len(context_list[0]))
