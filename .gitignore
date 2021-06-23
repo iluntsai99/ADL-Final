@@ -1,2 +1,3 @@
-data/
-NLG/I-Lun/adl-final-dst-with-chit-chat-seen-domains 
+__pycache__/
+ckpt/
+runs/

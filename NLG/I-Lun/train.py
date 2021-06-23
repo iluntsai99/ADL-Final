@@ -35,18 +35,20 @@ def main(args):
 
     if (args.start_from_last):
         print("load from last...")
-        model = MT5ForConditionalGeneration.from_pretrained(args.ckpt_dir).to(device)
+        model = GPT2LMHeadModel.from_pretrained(args.ckpt_dir).to(device)
     else:
         model = GPT2LMHeadModel.from_pretrained('gpt2').to(device)
     tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
     tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model.resize_token_embeddings(len(tokenizer)) 
     with tokenizer.as_target_tokenizer():
         train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
         dev_chitchat_tokenized = tokenizer([dev_data["chit-chat"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
     train_context_tokenized = tokenizer([train_data["context"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
     dev_context_tokenized = tokenizer([dev_data["context"] for dev_data in data[DEV]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
-    print(len(train_chitchat_tokenized['input_ids']))
-    print(train_chitchat_tokenized['input_ids'][0], dev_chitchat_tokenized['input_ids'][0])
+    # print(len(train_chitchat_tokenized['input_ids']))
+    # print(dev_context_tokenized['input_ids'][0], dev_chitchat_tokenized['input_ids'][0])
     
     train_set = myDataset(TRAIN, data[TRAIN], train_chitchat_tokenized, train_context_tokenized)
     dev_set = myDataset(DEV, data[DEV], dev_chitchat_tokenized, dev_context_tokenized)
@@ -63,7 +65,8 @@ def main(args):
         train_loss = 0
         for i, datas in enumerate(tqdm(train_loader)):
             datas = [data.to(device) for data in datas]
-            output = model(datas[1], labels=datas[0])
+            # print(datas[1].shape, datas[0].shape)
+            output = model(datas[1], labels=datas[1])
 
             train_loss += output.loss
             normalized_loss = output.loss / args.gradient_accumulation_step
@@ -84,12 +87,12 @@ def main(args):
         model.eval()
         with torch.no_grad():
             dev_acc = 0
-            randomlist = random.sample(range(0, len(dev_set)), len(dev_set) // 2)
+            # randomlist = random.sample(range(0, len(dev_set)), len(dev_set))
             dev_subset = Subset(dev_set, randomlist)
             dev_loader = DataLoader(dev_subset, batch_size=args.batch_size, shuffle=False)
             for j, datas in enumerate(dev_loader):
                 datas = [data.to(device) for data in datas]
-                output = model(datas[1], labels=datas[0])
+                output = model(datas[1], labels=datas[1])
                 dev_loss += (output.loss.item() / len(dev_loader))
                 print(f"Validation | Steps {j}/{len(dev_loader)} | loss = {dev_loss:.3f}", end="\r")
 
@@ -124,13 +127,13 @@ def parse_args() -> Namespace:
     parser.add_argument("--lr", type=float, default=1e-3)
 
     # data loader
-    parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--max_title_len", type=int, default=64)
-    parser.add_argument("--max_maintext_len", type=int, default=512)
+    parser.add_argument("--batch_size", type=int, default=16)
+    parser.add_argument("--max_chitchat_len", type=int, default=64)
+    parser.add_argument("--max_context_len", type=int, default=512)
 
     # training
     parser.add_argument("--start_from_last", action="store_true")
-    parser.add_argument("--num_epoch", type=int, default=50)
+    parser.add_argument("--num_epoch", type=int, default=10)
     parser.add_argument("--gradient_accumulation_step", type=int, default=16)
 
     args = parser.parse_args()
@@ -144,6 +147,7 @@ if __name__ == "__main__":
         device = accelerator.device
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    # device = "cpu"
     args = parse_args()
     args.ckpt_dir.mkdir(parents=True, exist_ok=True)
     main(args)
