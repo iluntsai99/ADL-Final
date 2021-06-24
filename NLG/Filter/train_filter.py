@@ -53,7 +53,7 @@ def main(args):
     
     
     train_dataset = Context_Dataset('train', train_data, train_dialogues_tokenized, train_choices_tokenized, train_label_indice)
-    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
     eval_dataset = Context_Dataset('eval', eval_data, eval_dialogues_tokenized, eval_choices_tokenized, eval_label_indice)
     eval_loader = DataLoader(eval_dataset, batch_size=1, shuffle=False)
 
@@ -84,7 +84,7 @@ def main(args):
         train_loss = train_acc = 0
         for batch_idx, data in enumerate(tqdm(train_loader)):	
             data = [i.to(device) for i in data] # input_ids, attention_mask, token_type_ids, label
-            # print(data)
+
             output = model(input_ids=data[0], attention_mask=data[1], token_type_ids=data[2], labels=data[3])
 
             train_acc += (torch.argmax(output.logits, dim=1)==data[3]).float().mean()

@@ -9,8 +9,8 @@ class Context_Dataset(Dataset):
         self.tokenized_dialogue = tokenized_dialogue
         self.tokenized_choices = tokenized_choices
         self.label = label
-        self.max_dialogue_len = 400
-        self.max_choice_len = 109
+        self.max_dialogue_len = 350
+        self.max_choice_len = 64
 
         # Input sequence length = [CLS] + question + [SEP] + paragraph + [SEP]
         self.max_seq_len = 1 + self.max_dialogue_len + 1 + self.max_choice_len + 1
@@ -19,14 +19,14 @@ class Context_Dataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        tokenized_dialogue = [101] + self.tokenized_dialogue[idx].ids[:self.max_dialogue_len] + [102]
+        tokenized_dialogue = [101] + self.tokenized_dialogue[idx].ids[-self.max_dialogue_len:] + [102]
         
         related_tokenized_choices = [c['input_ids'][:self.max_choice_len]+[102] for c in self.tokenized_choices[idx]]
 
         input_ids, attention_mask, token_type_ids = self.padding(tokenized_dialogue, related_tokenized_choices)
 
         if self.split == "train" or self.split == "eval":
-            return torch.tensor(input_ids), torch.tensor(attention_mask), torch.tensor(token_type_ids), torch.tensor(self.label)
+            return torch.tensor(input_ids), torch.tensor(attention_mask), torch.tensor(token_type_ids), torch.tensor(self.label[idx])
 
         # Testing
         else:
