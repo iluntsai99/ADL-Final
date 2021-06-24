@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader, Dataset, ConcatDataset, Subset
 from transformers import T5ForConditionalGeneration, T5TokenizerFast
 from transformers import Adafactor
 import transformers
+from transformers.utils.dummy_pt_objects import BertForMaskedLM
 
 import utils
 from dataset import myDataset
@@ -42,28 +43,34 @@ def main(args):
     dialogue, turn =0, 1
     with torch.no_grad():
         for i, datas in enumerate(tqdm(test_loader)):
-            outputs = model.generate(input_ids=datas[0].to(device), attention_mask=datas[1].to(device), max_length=args.max_chitchat_len, num_beams=10, repetition_penalty=2.5, do_sample=True, use_cache=True)
+            outputs = model.generate(input_ids=datas[0].to(device), attention_mask=datas[1].to(device), max_length=args.max_chitchat_len, num_beams=10, repetition_penalty=2.5, do_sample=True, use_cache=True, top_k=100)
             # print(outputs.shape)
             for j in range(outputs.shape[0]):
                 gen = tokenizer.decode(outputs[j], skip_special_tokens=False)
                 print("generated:", gen)
+                begin = True
                 try:
                     start = gen.index('<|chitchat|>')+12
+                    begin = False if start > 17 else True
                     end = gen.index('<', start)
                     print("=========chit-chat time!=========")
                 except:
                     start, end = 0, 0
-                print("start:{}, end:{}".format(start, end))
+                print("start:{}, end:{}, {}".format(start, end, begin))
                 print(gen[start:end])
                 cur_id = datas[2][j]
                 if prev_id != cur_id:
                     if prev_id != "":
                         results[prev_id] = dialogue
-                        # print(results)
+                        print(results)
                     dialogue = dict()
                     prev_id = cur_id
                     turn = 1
-                dialogue[str(turn)] = {'start': gen[start:end], 'end': gen[start:end], 'mod': ""}
+                dialogue[str(turn)] = {'start': '', 'end': '', 'mod': ''}
+                if begin:
+                    dialogue[str(turn)]['start'] = gen[start:end]
+                else:
+                    dialogue[str(turn)]['end'] = gen[start:end]
                 turn += 2
     # for last dialogue
     results[prev_id] = dialogue

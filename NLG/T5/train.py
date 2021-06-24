@@ -131,11 +131,11 @@ def parse_args() -> Namespace:
         "--ckpt_dir",
         type=Path,
         help="Directory to save the model file.",
-        default="./ckpt/adaf/",
+        default="./ckpt/adam/",
     )
 
     # optimizer
-    parser.add_argument("--lr", type=float, default=1e-3)
+    parser.add_argument("--lr", type=float, default=5e-5)
 
     # data loader
     parser.add_argument("--batch_size", type=int, default=16)
@@ -144,7 +144,7 @@ def parse_args() -> Namespace:
 
     # training
     parser.add_argument("--start_from_last", action="store_true")
-    parser.add_argument("--num_epoch", type=int, default=10)
+    parser.add_argument("--num_epoch", type=int, default=5)
     parser.add_argument("--gradient_accumulation_step", type=int, default=32)
     parser.add_argument("--logging_step", type=int, default=750)
 
