@@ -96,8 +96,8 @@ def parse_args() -> Namespace:
         help="Prediction file",
         default="./results.json",
     )
-    parser.add_argument("--batch_size", type=int, default=1)
-    parser.add_argument("--max_chitchat_len", type=int, default=512+32)
+    parser.add_argument("--batch_size", type=int, default=8)
+    parser.add_argument("--max_chitchat_len", type=int, default=512+16)
     parser.add_argument("--max_context_len", type=int, default=512)
 
     args = parser.parse_args()

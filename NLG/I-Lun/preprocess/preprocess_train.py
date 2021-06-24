@@ -11,6 +11,7 @@ def preprocess(directory):
 		context_path = directory/filename
 		contexts = json.loads(context_path.read_text())
 		# print(contexts[0])
+		# print(filename)
 		
 		# each file has several dialogues
 		for dialogue in range(len(contexts)):
@@ -20,21 +21,37 @@ def preprocess(directory):
 					context_prefix += '<|user|>'+contexts[dialogue]['turns'][i]['utterance']
 				else:  # system turn
 					chitchat_dict = dict()
+					chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
+					chitchat_dict['context'] = ""
+					chitchat_dict['chit-chat'] = list()
+					begin, end = False, False
 					if 'beginning' in contexts[dialogue]['turns'][i] and contexts[dialogue]['turns'][i]['beginning']:
-						if contexts[dialogue]['turns'][i]['beginning'][0]['label'] == "good":
-							chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
-							chitchat_dict['context'] = context_prefix+'=<|chitchat|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']+'<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|endoftext|>'
-							chitchat_dict['chit-chat'] = '<|chitchat|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']
-							context_list.append(chitchat_dict)
-							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']+contexts[dialogue]['turns'][i]['utterance']
-					elif 'end' in contexts[dialogue]['turns'][i] and contexts[dialogue]['turns'][i]['end']:
-						if contexts[dialogue]['turns'][i]['end'][0]['label'] == "good":
-							chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
-							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
-							chitchat_dict['context'] = context_prefix+'=<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|chitchat|>'+contexts[dialogue]['turns'][i]['end'][0]['candidate']+'<|endoftext|>'
-							chitchat_dict['chit-chat'] = '<|chitchat|>'+contexts[dialogue]['turns'][i]['end'][0]['candidate']
-							context_list.append(chitchat_dict)
-							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']+contexts[dialogue]['turns'][i]['end'][0]['candidate']
+						new_chitchat = ""
+						for j in range(len(contexts[dialogue]['turns'][i]['beginning'])):
+							if contexts[dialogue]['turns'][i]['beginning'][j]['label'] == "good":
+								new_chitchat += contexts[dialogue]['turns'][i]['beginning'][j]['candidate']
+						if new_chitchat != "":
+							chitchat_dict['context'] = context_prefix+'=<|chitchat|>'+new_chitchat+'<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|endoftext|>'
+							chitchat_dict['chit-chat'].append(new_chitchat)
+							begin = True
+					if 'end' in contexts[dialogue]['turns'][i] and contexts[dialogue]['turns'][i]['end']:
+						# print("list", len(contexts[dialogue]['turns'][i]['end']))
+						new_chitchat = ""
+						for j in range(len(contexts[dialogue]['turns'][i]['end'])):
+							if contexts[dialogue]['turns'][i]['end'][j]['label'] == "good":
+								# print(i, j, contexts[dialogue]['turns'][i]['end'][j]['candidate'])
+								new_chitchat += contexts[dialogue]['turns'][i]['end'][j]['candidate']
+						if new_chitchat != "":
+							if begin:
+								chitchat_dict['context'] = chitchat_dict['context'].replace('<|endoftext|>', '')
+								chitchat_dict['context'] += '<|chitchat|>'+new_chitchat
+							else:
+								chitchat_dict['context'] = context_prefix+'=<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|chitchat|>'+new_chitchat+'<|endoftext|>'
+							chitchat_dict['chit-chat'].append(new_chitchat)
+							end = True	
+					if begin or end:
+						context_prefix += chitchat_dict['context'].replace(context_prefix, '').replace('=', '').replace('<|endoftext|>', '')
+						context_list.append(chitchat_dict)
 					else:
 						context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
 
