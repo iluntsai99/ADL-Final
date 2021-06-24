@@ -39,7 +39,7 @@ def main(args):
     else:
         model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
     tokenizer = T5TokenizerFast.from_pretrained("t5-base")
-    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
+    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>', '<|blank|>']})
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer)) 
     train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
