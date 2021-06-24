@@ -23,7 +23,7 @@ def preprocess(directory):
 					if 'beginning' in contexts[dialogue]['turns'][i] and contexts[dialogue]['turns'][i]['beginning']:
 						if contexts[dialogue]['turns'][i]['beginning'][0]['label'] == "good":
 							chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
-							chitchat_dict['context'] = context_prefix+'=<|chitchat|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']+'<|system|>'+contexts[dialogue]['turns'][i]['utterance']
+							chitchat_dict['context'] = context_prefix+'=<|chitchat|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']+'<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|endoftext|>'
 							chitchat_dict['chit-chat'] = '<|chitchat|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']
 							context_list.append(chitchat_dict)
 							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['beginning'][0]['candidate']+contexts[dialogue]['turns'][i]['utterance']
@@ -31,7 +31,7 @@ def preprocess(directory):
 						if contexts[dialogue]['turns'][i]['end'][0]['label'] == "good":
 							chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
 							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
-							chitchat_dict['context'] = context_prefix+'=<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|chitchat|>'+contexts[dialogue]['turns'][i]['end'][0]['candidate']
+							chitchat_dict['context'] = context_prefix+'=<|system|>'+contexts[dialogue]['turns'][i]['utterance']+'<|chitchat|>'+contexts[dialogue]['turns'][i]['end'][0]['candidate']+'<|endoftext|>'
 							chitchat_dict['chit-chat'] = '<|chitchat|>'+contexts[dialogue]['turns'][i]['end'][0]['candidate']
 							context_list.append(chitchat_dict)
 							context_prefix += '<|system|>'+contexts[dialogue]['turns'][i]['utterance']+contexts[dialogue]['turns'][i]['end'][0]['candidate']

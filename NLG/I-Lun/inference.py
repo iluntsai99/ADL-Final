@@ -34,9 +34,9 @@ def main(args):
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     tokenizer.pad_token=tokenizer.eos_token
     model.resize_token_embeddings(len(tokenizer)) 
-    with tokenizer.as_target_tokenizer():
-        test_context_tokenized = tokenizer([test_data["context"] for test_data in data[TEST]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
-    test_set = myDataset(split, data[TEST], None, test_context_tokenized)
+    test_context_tokenized = tokenizer([test_data["context"] for test_data in data[TEST]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
+    test_context_tokenized = utils.create_labels(test_context_tokenized)
+    test_set = myDataset(split, data[TEST], test_context_tokenized)
     test_loader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
     model.eval()
@@ -45,19 +45,20 @@ def main(args):
     dialogue, turn =0, 1
     with torch.no_grad():
         for i, datas in enumerate(tqdm(test_loader)):
-            outputs = model.generate(input_ids=datas[0].to(device), max_length=args.max_chitchat_len, num_beams=10, repetition_penalty=2.5, do_sample=True, use_cache=True)
-            print(outputs.shape)
+            outputs = model.generate(input_ids=datas[0].to(device), attention_mask=datas[1].to(device), max_length=args.max_chitchat_len, num_beams=10, repetition_penalty=2.5, do_sample=True, use_cache=True)
+            # print(outputs.shape)
             for j in range(outputs.shape[0]):
                 gen = tokenizer.decode(outputs[j][args.max_context_len:], skip_special_tokens=False)
                 print(gen)
                 try:
                     start = gen.index('<|chitchat|>')+12
-                    end = gen.index('<')
+                    end = gen.index('<', start)
                     print("=========chit-chat time!=========")
                 except:
                     start, end = 0, 0
-
-                cur_id = datas[1][j]
+                print(start, end)
+                print(gen[start:end])
+                cur_id = datas[3][j]
                 if prev_id != cur_id:
                     if prev_id != "":
                         results[prev_id] = dialogue
