@@ -30,7 +30,7 @@ class Context_Dataset(Dataset):
 
         # Testing
         else:
-            return torch.tensor(input_ids), torch.tensor(attention_mask), torch.tensor(token_type_ids)#, torch.tensor(self.related_contexts_pack[idx])
+            return torch.tensor(input_ids), torch.tensor(attention_mask), torch.tensor(token_type_ids)#, torch.tensor(related_tokenized_choices)
 
     def padding(self, question_id, contexts_id):
         input_ids = []
