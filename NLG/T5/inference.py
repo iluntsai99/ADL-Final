@@ -30,7 +30,7 @@ def main(args):
 
     model = T5ForConditionalGeneration.from_pretrained(args.ckpt_dir).to(device)
     tokenizer = T5TokenizerFast.from_pretrained('t5-large')
-    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
+    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>', '<|blank|>']})
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer)) 
     test_context_tokenized = tokenizer([test_data["context"] for test_data in data[TEST]], return_tensors="pt", truncation=True, max_length=args.max_context_len, padding=True)
@@ -47,30 +47,43 @@ def main(args):
             # print(outputs.shape)
             for j in range(outputs.shape[0]):
                 gen = tokenizer.decode(outputs[j], skip_special_tokens=False)
-                print("generated:", gen)
-                begin = True
+                # <pad><|chitchat|> I would love to do that for you! I just want to confirm you want to arrive at the restaurant at 12:15, correct?<|system|> Do you have any other questions?</s>
+                if "extra_id_" in gen:
+                    gen_parts = gen.split('extra_id_')
+                    for k, parts in enumerate(gen_parts):
+                        gen_parts[k] = gen_parts[k][2:] if k > 0 else gen_parts[k]
+                    gen = "|chitchat|".join(gen_parts)
+                    print(gen)
+                gen = gen.replace('<pad>', '').replace('</s>', '').replace('<', '').replace('>', '')
+                gen = gen.split('|')
+                system, chitchat, begin = datas[3][j].replace('<|system|>', ''), "", True
+                # print(gen)
+                # print(len(gen))
                 try:
-                    start = gen.index('<|chitchat|>')+12
-                    begin = False if start > 17 else True
-                    end = gen.index('<', start)
-                    print("=========chit-chat time!=========")
+                    if system in gen[2]:
+                        chitchat = gen[4][1:]
+                        begin = False
+                        # print("end", system, chitchat)
+                    elif system in gen[4]:
+                        chitchat = gen[2][1:]
+                        begin = True
+                        # print("begin", system, chitchat)
                 except:
-                    start, end = 0, 0
-                print("start:{}, end:{}, {}".format(start, end, begin))
-                print(gen[start:end])
+                    print(gen)
+                # print("system:{}, chitchat:{}, {}".format(system, chitchat, begin))
                 cur_id = datas[2][j]
                 if prev_id != cur_id:
                     if prev_id != "":
                         results[prev_id] = dialogue
-                        print(results)
+                        # print(results)
                     dialogue = dict()
                     prev_id = cur_id
                     turn = 1
                 dialogue[str(turn)] = {'start': '', 'end': '', 'mod': ''}
                 if begin:
-                    dialogue[str(turn)]['start'] = gen[start:end]
+                    dialogue[str(turn)]['start'] = chitchat
                 else:
-                    dialogue[str(turn)]['end'] = gen[start:end]
+                    dialogue[str(turn)]['end'] = chitchat
                 turn += 2
     # for last dialogue
     results[prev_id] = dialogue
@@ -100,7 +113,7 @@ def parse_args() -> Namespace:
         help="Prediction file",
         default="./result.json",
     )
-    parser.add_argument("--batch_size", type=int, default=1)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--max_chitchat_len", type=int, default=64)
     parser.add_argument("--max_context_len", type=int, default=512)
 
