@@ -20,4 +20,4 @@ class myDataset(Dataset):
         else:
             return torch.tensor(self.tokenized_context["input_ids"][index]), \
                     torch.tensor(self.tokenized_context["attention_mask"][index]), \
-                    self.data[index]["dialogue_id"]
+                    self.data[index]["dialogue_id"], self.data[index]["system"]

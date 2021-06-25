@@ -64,7 +64,8 @@ def main(args):
     # optimizer = Adafactor(model.parameters(), lr=args.lr, scale_parameter=False, relative_step=False)
     optimizer = AdamW(model.parameters(), lr=args.lr)
     update_step = args.num_epoch * len(train_loader) // args.gradient_accumulation_step + args.num_epoch
-    scheduler = get_linear_schedule_with_warmup(optimizer, 0.1 * update_step, update_step)
+    warmup_step = 0 if args.start_from_last else update_step * 0.1
+    scheduler = get_linear_schedule_with_warmup(optimizer, warmup_step, update_step)
 
     best_loss = 10000
     for epoch in range(args.num_epoch):
