@@ -21,7 +21,7 @@ def preprocess(directory):
 				else:  # system turn
 					chitchat_dict = dict()
 					chitchat_dict['dialogue_id'] = contexts[dialogue]['dialogue_id']
-					chitchat_dict['context'] = context_prefix
+					chitchat_dict['context'] = context_prefix+'<|blank|>'+contexts[dialogue]['turns'][i]['utterance']+'<|blank|>'
 					chitchat_dict['system'] = '<|system|>'+contexts[dialogue]['turns'][i]['utterance']
 					context_list.append(chitchat_dict)
 					context_prefix += chitchat_dict['system']

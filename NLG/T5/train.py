@@ -39,7 +39,7 @@ def main(args):
     else:
         model = T5ForConditionalGeneration.from_pretrained("t5-base").to(device)
     tokenizer = T5TokenizerFast.from_pretrained("t5-base")
-    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>']})
+    tokenizer.add_special_tokens({'additional_special_tokens': ['<|user|>', '<|system|>', '<|chitchat|>', '<|blank|>']})
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer)) 
     train_chitchat_tokenized = tokenizer([train_data["chit-chat"] for train_data in data[TRAIN]], return_tensors="pt", truncation=True, max_length=args.max_chitchat_len, padding=True)
@@ -131,11 +131,11 @@ def parse_args() -> Namespace:
         "--ckpt_dir",
         type=Path,
         help="Directory to save the model file.",
-        default="./ckpt/adaf/",
+        default="./ckpt/adam/",
     )
 
     # optimizer
-    parser.add_argument("--lr", type=float, default=1e-3)
+    parser.add_argument("--lr", type=float, default=5e-5)
 
     # data loader
     parser.add_argument("--batch_size", type=int, default=16)
@@ -144,7 +144,7 @@ def parse_args() -> Namespace:
 
     # training
     parser.add_argument("--start_from_last", action="store_true")
-    parser.add_argument("--num_epoch", type=int, default=10)
+    parser.add_argument("--num_epoch", type=int, default=5)
     parser.add_argument("--gradient_accumulation_step", type=int, default=32)
     parser.add_argument("--logging_step", type=int, default=750)
 

@@ -52,7 +52,7 @@ def preprocess(directory):
 						except:
 							context, chitchat_1, chitchat_2 = chitchat_dict['context'].split('=')
 							chitchat = chitchat_1 + chitchat_2
-						chitchat_dict['context'] = context
+						chitchat_dict['context'] = context+'<|blank|>'+contexts[dialogue]['turns'][i]['utterance']+'<|blank|>'
 						chitchat_dict['chit-chat'] = chitchat
 						context_list.append(chitchat_dict)
 					else:
