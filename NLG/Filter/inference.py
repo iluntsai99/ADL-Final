@@ -22,7 +22,7 @@ def same_seeds(seed):
 
 def main(args):
     same_seeds(0)
-    test_path = args.data_dir/f"results.json"
+    test_path = args.data_dir/f"result.json"
     dialogue_path = args.data_dir/f"test.json"
 
     test_data = json.loads(test_path.read_text())

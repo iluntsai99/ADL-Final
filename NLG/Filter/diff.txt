@@ -1,0 +1,232 @@
+468c468
+<       "end": "It's a great place to stay.",
+---
+>       "end": "",
+2199c2199
+<       "start": "Booking was successful. The table will be reserved for 15 minutes. Your reference number is FVVICA5M. Will that be all?",
+---
+>       "start": "",
+4319c4319
+<       "end": "You are welcome.",
+---
+>       "end": "",
+4452c4452
+<       "end": "Bye.",
+---
+>       "end": "",
+4742c4742
+<       "start": "Portland is a great place to visit.",
+---
+>       "start": "",
+4968c4968
+<       "start": "You are very welcome.",
+---
+>       "start": "",
+4980c4980
+<       "start": "Vegas is a great place to visit.",
+---
+>       "start": "",
+5714c5714
+<       "start": "Thank you for your time.",
+---
+>       "start": "",
+12840c12840
+<       "end": "Thank you.",
+---
+>       "end": "",
+13387c13387
+<       "end": "It is a great place to stay.",
+---
+>       "end": "",
+18934c18934
+<       "end": "What do you think?",
+---
+>       "end": "",
+19464c19464
+<       "end": "I'm happy to help.",
+---
+>       "end": "",
+20049c20049
+<       "start": "It's a great place to stay.",
+---
+>       "start": "",
+20921c20921
+<       "end": "it's a great place to eat.",
+---
+>       "end": "",
+21995c21995
+<       "end": "What do you think?",
+---
+>       "end": "",
+22505c22505
+<       "start": "thank you for your patience.",
+---
+>       "start": "",
+23074c23074
+<       "end": "Thank you!",
+---
+>       "end": "",
+26613c26613
+<       "end": "If you need anything else, please don't hesitate to ask.",
+---
+>       "end": "",
+29212c29212
+<       "end": "it's a lot of fun.",
+---
+>       "end": "",
+29364c29364
+<       "start": "Comedy-drama movies.",
+---
+>       "start": "",
+30220c30220
+<       "start": "Sure, would you like to visit it?",
+---
+>       "start": "",
+31630c31630
+<       "end": "What do",
+---
+>       "end": "",
+36640c36640
+<       "start": "Thank you.",
+---
+>       "start": "",
+37728c37728
+<       "start": "sounds good to me.",
+---
+>       "start": "",
+38317c38317
+<       "start": "Thank you very much! On that day I also want to make a reservation for an appointment at the salon you found earlier.",
+---
+>       "start": "",
+39161c39161
+<       "start": "Green Tortoise Hostel San Francisco is a 1 star hotel you may like.",
+---
+>       "start": "",
+40471c40471
+<       "start": "Thank you very much. You're welcome. I hope you enjoy your visit.",
+---
+>       "start": "",
+44953c44953
+<       "start": "Thank you.",
+---
+>       "start": "",
+47353c47353
+<       "start": "you are very welcome.",
+---
+>       "start": "",
+48928c48928
+<       "start": "Okay, good. May I also do a payment request?",
+---
+>       "start": "",
+51081c51081
+<       "start": "Great Wall Restaurant is located in Lafayette.",
+---
+>       "start": "",
+51086c51086
+<       "start": "Great Wall Restaurant is located in Lafayette.",
+---
+>       "start": "",
+51091c51091
+<       "start": "Thank you.",
+---
+>       "start": "",
+51383c51383
+<       "start": "Vegas is a great place to visit.",
+---
+>       "start": "",
+51901c51901
+<       "end": "If you need anything else, please don't hesitate to contact me.",
+---
+>       "end": "",
+57698c57698
+<       "start": "Sure, could you get me an appointment then?",
+---
+>       "start": "",
+58128c58128
+<       "start": "Sounds good! Could you get an appointment with her at 5:30 pm?",
+---
+>       "start": "",
+60386c60386
+<       "end": "Let me know if there's anything else I can help you with.",
+---
+>       "end": "",
+60784c60784
+<       "start": "Okay, reserve that room.",
+---
+>       "start": "",
+62776c62776
+<       "start": "I hope you enjoy your visit.",
+---
+>       "start": "",
+62798c62798
+<       "start": "Vista Oaks Apartments is a nice property at 3883 Vista Oaks Drive. The rent is $2,300.",
+---
+>       "start": "",
+64344c64344
+<       "start": "Thank you.",
+---
+>       "start": "",
+65153c65153
+<       "start": "Thank you for your patience.",
+---
+>       "start": "",
+66025c66025
+<       "start": "Thank you.",
+---
+>       "start": "",
+66194c66194
+<       "start": "Thank you.",
+---
+>       "start": "",
+66271c66271
+<       "start": "Sea Noodle Bar is a nic restaurant in Santa Rosa.",
+---
+>       "start": "",
+66743c66743
+<       "start": "sounds good to me.",
+---
+>       "start": "",
+67039c67039
+<       "start": "Izakaya is a Japanese restaurant.",
+---
+>       "start": "",
+68937c68937
+<       "start": "I'll be leaving from Washington to go on my trip.",
+---
+>       "start": "",
+70057c70057
+<       "start": "Theater is a great venue.",
+---
+>       "start": "",
+70562c70562
+<       "end": "It's going to be a lot of fun.",
+---
+>       "end": "",
+71492c71492
+<       "start": "Music, Theater, or anything else.",
+---
+>       "start": "",
+75222c75222
+<       "start": "Thank you.",
+---
+>       "start": "",
+76147c76147
+<       "end": "Do you have any other questions?",
+---
+>       "end": "",
+76947c76947
+<       "end": "Do you have any other questions?",
+---
+>       "end": "",
+77893c77893
+<       "start": "I'll be departing from norwich, and will be going to cambridge. I'd like to arrive by 12:30.",
+---
+>       "start": "",
+80489c80489
+<       "start": "Tony Hale acted in the movie.",
+---
+>       "start": "",
+80824c80824
+<       "start": "okay, leave me alone now.",
+---
+>       "start": "",
