@@ -28,9 +28,12 @@ python inference.py
 ```
 
 ### Filtering
+
 ```shell
-# filtering
-LEO PLZ
+# training
+python train_filter.py --data_dir {dataset path}
+# inference
+python inference.py --data_dir {dataset path} --output_file {output path}
 ```
 
 
