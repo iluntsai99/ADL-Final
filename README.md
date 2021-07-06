@@ -45,7 +45,7 @@ LEO PLZ
 git clone https://github.com/iluntsai99/ADL-Final
 # download models
 cd ADL-Final/DST/
-bash download.sh
+bash download_glove.sh
 # Unzip preprocessed data (original data can be used if only testing is involved)
 unzip data.zip
 # Install dependencies
