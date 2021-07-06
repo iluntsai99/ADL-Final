@@ -1,4 +1,5 @@
-split = "test_seen" # Choose from dev, test_seen, test_unseen
+import sys
+split = sys.argv[1] # Choose from dev, test_seen, test_unseen
 
 def LCSubStr(X, Y, m, n):
  
