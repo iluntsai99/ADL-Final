@@ -40,11 +40,7 @@ python inference.py --data_dir {dataset path} --output_file {output path}
 
 ## DST
 
-## NLG
-
-***Note that the dataset has already been preprocessed and saved in zipped folder "data"
-
-
+**Note that the dataset has already been preprocessed and saved in zipped folder "data"**
 
 ### Download, extract data, and dependencies
 
@@ -52,7 +48,7 @@ python inference.py --data_dir {dataset path} --output_file {output path}
 git clone https://github.com/iluntsai99/ADL-Final
 # download models
 cd ADL-Final/DST/
-bash download.sh
+bash download_glove.sh
 # Unzip preprocessed data (original data can be used if only testing is involved)
 unzip data.zip
 # Install dependencies
@@ -83,10 +79,11 @@ bash test_seen.sh
 bash test_unseen.sh
 # csv submission result is seen_submission.csv and unseen_submission.csv respectively
 ```
+**Note: For postprocessing with glove, please switch to use final_answer_process_with_glove.py instead of final_answer_process.py**
+
 ### Model Link
 
 drive: https://drive.google.com/file/d/1usvvvzcqwdaOO7yKUlVyt8VQYep2ctjg/view?usp=sharing
-
 
 
 ### 講稿&投影片
