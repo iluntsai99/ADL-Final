@@ -1,13 +1,14 @@
 # README for ADL-Final NTU 109 Spring
 ## NLG
 
-***Note that the datas have already been preprocessed and saved in folder "dataset"**
+***Note that the datas have already been preprocessed and saved in folder "dataset". If you want to preprocess yourself, please checkout folder "preprocess"**
 
 ### Download
 
 ```shell
+git clone https://github.com/iluntsai99/ADL-Final
 # download models
-cd NLG/T5/
+cd ADL-Final/NLG/T5/
 bash download.sh
 ```
 
@@ -23,7 +24,17 @@ python train.py
 ```shell
 # testing
 python inference.py
+# chit-chat result in result.json
 ```
+
+### Filtering
+
+```shell
+# filtering
+LEO PLZ
+```
+
+
 
 ## DST
 
