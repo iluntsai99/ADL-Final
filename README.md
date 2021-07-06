@@ -37,7 +37,50 @@ LEO PLZ
 
 ## DST
 
-### DST Model Link
+## NLG
+
+***Note that the dataset has already been preprocessed and saved in zipped folder "data"
+
+
+
+### Download, extract data, and dependencies
+
+```shell
+git clone https://github.com/iluntsai99/ADL-Final
+# download models
+cd ADL-Final/DST/
+bash download.sh
+# Unzip preprocessed data (original data can be used if only testing is involved)
+unzip data.zip
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Training
+
+```shell
+# Preprocess
+python train_process.py
+python dev_generate_answer.py
+python dev_to_test_format.py
+
+# training
+bash train.sh
+
+# validation
+bash dev.sh
+python final_answer_process.py dev
+```
+
+### Inference
+
+```shell
+# testing
+bash test_seen.sh
+bash test_unseen.sh
+# csv submission result is seen_submission.csv and unseen_submission.csv respectively
+```
+### Model Link
 
 drive: https://drive.google.com/file/d/1usvvvzcqwdaOO7yKUlVyt8VQYep2ctjg/view?usp=sharing
 
