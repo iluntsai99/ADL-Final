@@ -11,6 +11,9 @@ Step 1:
 dev.sh / test.sh / test_unseen.sh
 using process.py and run_summarization.py to generate dev_status.json / test_status_seen.json / test_status_unseen.json
 Step 2:
-final_answer_process.py to generate submisison file or validation
+final_answer_process.py to generate submission file or validation
 (change to dev / test_seen / test_unseen inside the file to switch)
-
+If you want to generate submission file with glove
+download_glove.sh
+final_answer_process_with_glove.py to generate submission file or validation
+(change to dev / test_seen / test_unseen inside the file to switch)
