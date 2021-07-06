@@ -80,6 +80,8 @@ bash test_seen.sh
 bash test_unseen.sh
 # csv submission result is seen_submission.csv and unseen_submission.csv respectively
 ```
+Note: For postprocessing with glove, please switch to use final_answer_process_with_glove.py instead of final_answer_process.py
+
 ### Model Link
 
 drive: https://drive.google.com/file/d/1usvvvzcqwdaOO7yKUlVyt8VQYep2ctjg/view?usp=sharing
