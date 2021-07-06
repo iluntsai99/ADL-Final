@@ -27,3 +27,4 @@ do
 done
 rm test_turns_unseen.jsonl
 rm test_turns_unseen.jsonl.lock
+python final_answer_process.py test_unseen
