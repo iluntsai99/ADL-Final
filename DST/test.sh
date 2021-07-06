@@ -27,4 +27,4 @@ do
 done
 rm test_turns.jsonl
 rm test_turns.jsonl.lock
-python final_answer_process.py test_seen
+python final_answer_process_with_glove.py test_seen
