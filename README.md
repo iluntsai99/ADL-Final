@@ -28,7 +28,6 @@ python inference.py
 ```
 
 ### Filtering
-
 ```shell
 # filtering
 LEO PLZ
