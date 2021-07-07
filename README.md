@@ -75,7 +75,7 @@ python final_answer_process.py dev
 
 ```shell
 # testing
-bash test_seen.sh
+bash test.sh
 bash test_unseen.sh
 # csv submission result is seen_submission.csv and unseen_submission.csv respectively
 ```
